@@ -16,6 +16,8 @@
                 type="number"
                 placeholder="Numéro de téléphone"
                 aria-label="default input example"
+                name="numero"
+                v-model="numero"
               />
             </div>
 
@@ -28,6 +30,8 @@
                 type="date"
                 placeholder="Date de naissance"
                 aria-label="default input example"
+                name="date_naissance"
+                v-model="date_naissance"
               />
             </div>
 
@@ -40,6 +44,8 @@
                 type="text"
                 placeholder="Pays de naissance"
                 aria-label="default input example"
+                name="pays_naissance"
+                v-model="pays_naissance"
               />
             </div>
 
@@ -52,6 +58,8 @@
                 type="text"
                 placeholder="Nationalité"
                 aria-label="default input example"
+                name="nationalite"
+                v-model="nationalite"
               />
             </div>
 
@@ -64,6 +72,8 @@
                 type="text"
                 placeholder="Adresse du domicile"
                 aria-label="default input example"
+                name="domicile"
+                v-model="domicile"
               />
             </div>
 
@@ -76,6 +86,8 @@
                 type="text"
                 placeholder="Ville"
                 aria-label="default input example"
+                name="ville"
+                v-model="ville"
               />
             </div>
             <button

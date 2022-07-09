@@ -1,156 +1,133 @@
 <template>
-  <section class="sec-product bg0 p-b-80">
-    <div class="container">
-      <div class="p-b-32">
-        <h3 class="ltext-105 cl5 txt-center respon1">
-          Nos produits
-        </h3>
-      </div>
-      <!-- Store overview tab -->
-      <div class="store-overview-tab">
-        <b-tabs content-class="p-t-43">
-          <b-tab
-            v-for="(item, index) in tabListData"
-            v-bind:title="item.tabName"
-            v-bind:key="index"
-            v-bind:class="{ active: currentActiveTab == item.tabName }"
-            @click="setCurrentTab(item.tabName)"
-          >
-            <StoreOverviewCarousel
-              style="i"
-              v-if="currentActiveTab == item.tabName"
-              v-bind:current-tab-data="item"
-            />
-          </b-tab>
-        </b-tabs>
-      </div>
-    </div>
-  </section>
+  <div class="container shopHome">
+    <ShopIsotope v-bind:product-data="productlist" />
+  </div>
 </template>
 <script>
-import StoreOverviewCarousel from "@/components/home/StoreOverviewCarousel.vue";
+import ShopIsotope from "@/components/shop/ShopIsotope.vue";
+import axios from "axios";
 export default {
-  name: "StoreOverview",
+  name: "ShopHome",
   components: {
-    StoreOverviewCarousel
+    ShopIsotope
   },
   data() {
     return {
-      tabListData: [
+      productlist: [
         {
-          tabName: "Eau en bouteille",
-          product: [
-            {
-              productImg: "img4.jpg",
-              productName: "Herschel supply",
-              productCost: "$35.31"
-            }
-          ]
+          productImg: "img4.jpg",
+          productName: "Herschel supply",
+          productCost: "$35.31"
         },
         {
-          tabName: "Parfum",
-          product: [
-            {
-              productImg: "img3.jpg",
-              productName: "Esprit Ruffle Shirt",
-              productCost: "$16.64"
-            }
-          ]
-        },
-
-        {
-          tabName: "Sac a poubelle",
-          product: [
-            {
-              productImg: "img6.jpg",
-              productName: "Esprit Ruffle Shirt",
-              productCost: "$16.64"
-            }
-          ]
+          productImg: "img3.jpg",
+          productName: "Herschel supply",
+          productCost: "$35.31",
+          category: "women"
         },
         {
-          tabName: "Ciment",
-          product: [
-            {
-              productImg: "img5.jpg",
-              productName: "CIMENT PARENN",
-              productCost: "$35.31"
-            }
-          ]
+          productImg: "img6.jpg",
+          productName: "Only Check Trouser",
+          productCost: "$25.50",
+          category: "men"
         },
         {
-          tabName: "Bracelet",
-          product: [
-            {
-              productImg: "img7.jpg",
-              productName: "BRACELET PARENN",
-              productCost: "$35.31"
-            }
-          ]
-        },
-        {
-          tabName: "Camion décharge",
-          product: [
-            {
-              productImg: "img8.jpg",
-              productName: "CAMION DÉCHARGE PARENN",
-              productCost: "$35.31"
-            }
-          ]
+          productImg: "img5.jpg",
+          productName: "Classic Trench Coat",
+          productCost: "$75.00",
+          category: "women"
         }
         // {
-        //   tabName: "Top Rate",
-        //   product: [
-        //     {
-        //       productImg: "product-11.jpg",
-        //       productName: "Herschel supply",
-        //       productCost: "$63.16"
-        //     },
-        //     {
-        //       productImg: "product-13.jpg",
-        //       productName: "T-Shirt with Sleeve",
-        //       productCost: "$18.49"
-        //     },
-        //     {
-        //       productImg: "product-03.jpg",
-        //       productName: "Only Check Trouser",
-        //       productCost: "$25.50"
-        //     },
-        //     {
-        //       productImg: "product-04.jpg",
-        //       productName: "Classic Trench Coat",
-        //       productCost: "$75.00"
-        //     },
-        //     {
-        //       productImg: "product-05.jpg",
-        //       productName: "Front Pocket Jumper",
-        //       productCost: "$34.75"
-        //     },
-        //     {
-        //       productImg: "product-06.jpg",
-        //       productName: "Vintage Inspired Classic",
-        //       productCost: "$93.20"
-        //     },
-        //     {
-        //       productImg: "product-07.jpg",
-        //       productName: "Shirt in Stretch Cotton",
-        //       productCost: "$52.66"
-        //     },
-        //     {
-        //       productImg: "product-08.jpg",
-        //       productName: "Pieces Metallic Printed",
-        //       productCost: "$18.96"
-        //     }
-        //   ]
+        //   productImg: "product-05.jpg",
+        //   productName: "Front Pocket Jumper",
+        //   productCost: "$34.75",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-06.jpg",
+        //   productName: "Vintage Inspired Classic",
+        //   productCost: "$93.20",
+        //   category: "watch"
+        // },
+        // {
+        //   productImg: "product-07.jpg",
+        //   productName: "Shirt in Stretch Cotton",
+        //   productCost: "$52.66",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-08.jpg",
+        //   productName: "Pieces Metallic Printed",
+        //   productCost: "$18.96",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-09.jpg",
+        //   productName: "Converse All Star Hi Plimsolls",
+        //   productCost: "$75.00",
+        //   category: "shoes"
+        // },
+        // {
+        //   productImg: "product-10.jpg",
+        //   productName: "Herschel supply",
+        //   productCost: "$63.16",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-11.jpg",
+        //   productName: "T-Shirt with Sleeve",
+        //   productCost: "$18.49",
+        //   category: "men"
+        // },
+        // {
+        //   productImg: "product-12.jpg",
+        //   productName: "Mini Silver Mesh Watch",
+        //   productCost: "$86.85",
+        //   category: "belts"
+        // },
+        // {
+        //   productImg: "product-13.jpg",
+        //   productName: "quare Neck Back",
+        //   productCost: "$29.64",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-14.jpg",
+        //   productName: "Silver Mesh",
+        //   productCost: "$49.64",
+        //   category: "women"
+        // },
+        // {
+        //   productImg: "product-15.jpg",
+        //   productName: "Neck Back",
+        //   productCost: "$59.64",
+        //   category: "watch"
+        // },
+        // {
+        //   productImg: "product-16.jpg",
+        //   productName: "quare Neck",
+        //   productCost: "$29.64",
+        //   category: "women"
         // }
       ],
-      currentActiveTab: "Best Seller"
+      prod: []
     };
   },
-  methods: {
-    setCurrentTab(tabName) {
-      this.currentActiveTab = tabName;
-    }
+
+  mounted() {
+    axios({
+      method: "GET",
+      url: "http://localhost/backend/api/product.php",
+      config: { headers: { "Content-Type": "multipart/form-data" } }
+    })
+      .then(response => {
+        console.log("Connected", response.data);
+        this.prod.push(response.data);
+        console.log(this.prod);
+      })
+      .catch(error => {
+        console.log("Error", error);
+      });
   }
 };
 </script>

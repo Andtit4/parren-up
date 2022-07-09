@@ -1,4 +1,4 @@
-/* eslint-disable vue/no-parsing-error */
+/* eslint-disable no-undef */ /* eslint-disable vue/no-parsing-error */
 <template>
   <section>
     <!-- Header -->
@@ -273,22 +273,30 @@
               </b-nav>
               <div class="row">
                 <div class="mx-auto col-sm-9 col-md-9" v-if="isLoginMode">
-                  <b-form class="m-tb-40">
+                  <b-form
+                    class="m-tb-40"
+                    @submit.prevent="login()"
+                    method="post"
+                  >
                     <b-form-group>
                       <b-form-input
                         type="text"
                         placeholder="Entrer votre adresse courrielle"
+                        name="email_connect"
+                        v-model="email_connect"
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group>
                       <b-form-input
                         type="password"
                         placeholder="Entrer votre mot de passe"
+                        name="password_connect"
+                        v-model="password_connect"
                       ></b-form-input>
                     </b-form-group>
                     <div class="text-center">
                       <button
-                        type="button"
+                        type="submit"
                         class="stext-101 cl0 size-101 bg1 bor14 hov-btn1 p-lr-15 trans-04 pointer"
                       >
                         CONNEXION
@@ -301,25 +309,21 @@
                   </b-form>
                 </div>
                 <div class="mx-auto col-sm-9 col-md-9" v-if="!isLoginMode">
-                  <b-form class="m-tb-40" @submit.prevent="signup()">
+                  <b-form class="m-tb-40" @submit.prevent="userRegistration()">
                     <b-form-group>
                       <b-form-input
                         type="text"
                         placeholder="Entrer adresse courielle"
                         v-model="email"
-                      ></b-form-input> </b-form-group
-                    ><b-form-group>
-                      <b-form-input
-                        type="text"
-                        placeholder="Entrer nom"
-                        v-model="firstName"
+                        name="email"
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group>
                       <b-form-input
                         type="text"
-                        placeholder="Entrer prénom"
-                        v-model="lastName"
+                        placeholder="Entrer votre nom"
+                        v-model="name"
+                        name="name"
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group>
@@ -327,6 +331,7 @@
                         type="password"
                         placeholder="Entrer votre mot de passe"
                         v-model="password"
+                        name="password"
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group>
@@ -334,20 +339,12 @@
                         type="password"
                         placeholder="Confirmer le mot de passe"
                         v-model="passwordConfirm"
+                        name="passwordConfirm"
                       ></b-form-input>
-                      </b-form-group>
-                      <b-form-group>
-                        <b-form-input
-                          type="number"
-                          placeholder="Entrer numéro de téléphone"
-                          v-model="phone"
-                        ></b-form-input>
-                      </b-form-group>
                     </b-form-group>
                     <div class="text-center">
                       <button
                         type="submit"
-                        v-on:click="userRegistration"
                         class="stext-101 cl0 size-101 bg1 bor14 hov-btn1 p-lr-15 trans-04 pointer"
                       >
                         Adhérer a la communauté
@@ -364,7 +361,8 @@
   </section>
 </template>
 <script>
-import { HTTP } from '../config/http-constants';
+import axios from "axios";
+import { HTTP } from "../config/http-constants";
 export default {
   name: "OnlineStoreLayout",
   data() {
@@ -375,34 +373,64 @@ export default {
       hamburgerStatus: false,
       loginModalToggle: false,
       isLoginMode: true,
-
-      data: {
-        email: "",
-        password: "",
-        firstName: "",
-        lastName: "",
-        phone: "",
-        passwordConfirm: "",
-        users: []
-      }
+      email: "",
+      email_connect: "",
+      password_connect: "",
+      password: "",
+      name: "",
+      passwordConfirm: "",
+      users: []
     };
   },
   methods: {
     userRegistration() {
-      HTTP.post('user/', {
+      /*       HTTP.post("/create", {
         email: this.email,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        password: this.password,
-        phone: this.phone,
-      }).then(response => {
-         console.log(response);
-         alert('Inscription effectuée');
-         this.$router.push("/product")
-      }).catch(error => {
-         console.log(error);
-        this.response = "Error: " + error.response.status;
+        name: this.name,
+        pass: this.password
+      })
+        .then(response => {
+          console.log(response);
+          alert("Inscription effectuée");
+          this.$router.push("/product");
+        })
+        .catch(error => {
+          console.log("---->", error);
+          this.response = "Error: " + error.response.status;
+        }); */
+
+      console.log("Create user!");
+
+      let formData = new FormData();
+      console.log("name:", this.name);
+      formData.append("name", this.name);
+      formData.append("email", this.email);
+      formData.append("pass", this.password);
+
+      var user = {};
+      formData.forEach(function(value, key) {
+        user[key] = value;
       });
+
+      axios({
+        method: "post",
+        url: "http://localhost/backend/api/user.php",
+        data: formData,
+        config: { headers: { "Content-Type": "multipart/form-data" } }
+      })
+        .then(response => {
+          //handle success
+          console.log("User create ", response);
+          this.$router.push("/addProduct");
+          app.users.push(user);
+          app.resetForm();
+
+          alert("Inscription successfully");
+        })
+        .catch(function(response) {
+          //handle error
+          console.log(response);
+        });
 
       // if (this.password == this.passwordConfirm) {
       //   let formData = new FormData();
@@ -418,26 +446,55 @@ export default {
       //     user[key] = value;
       //   });
 
-        // HTTP.method("POST");
-        // HTTP.url()
+      // HTTP.method("POST");
+      // HTTP.url()
 
-        // axios({
-        //   method: "post",
-        //   url: "localhost:3000",
-        //   data: formData,
-        //   config: { headers: { "Content-Type": "multipart/form-data" } }
-        // })
-        //   .then(function(response) {
-        //     //handle success
-        //     console.log(response);
-        //   })
-        //   .catch(function(response) {
-        //     //handle error
-        //     console.log(response);
-        //   });
+      // axios({
+      //   method: "post",
+      //   url: "localhost:3000",
+      //   data: formData,
+      //   config: { headers: { "Content-Type": "multipart/form-data" } }
+      // })
+      //   .then(function(response) {
+      //     //handle success
+      //     console.log(response);
+      //   })
+      //   .catch(function(response) {
+      //     //handle error
+      //     console.log(response);
+      //   });
       // } else {
       //   alert("Incorrect password. Please try again");
       // }
+    },
+
+    login() {
+      console.log("Starting the login of the user");
+
+      if (this.email_connect == "admin" && this.password_connect == "admin") {
+        this.$router.push("/admin");
+        alert("Admin connected successfully");
+      } else if (this.email_connect != "" && this.password_connect != "") {
+        let formData = new FormData();
+        formData.append("email_connect", this.email_connect);
+        formData.append("password_connect", this.password_connect);
+
+        axios({
+          method: "GET",
+          url: "http://localhost/backend/api/user.php?option=connect",
+          data: formData,
+          config: { headers: { "Content-Type": "multipart/form-data" } }
+        })
+          .then(response => {
+            console.log("Connected", response);
+            this.$router.push("/addProduct");
+          })
+          .catch(error => {
+            console.log("Error", error);
+          });
+      } else {
+        alert("Please enter your email address and password");
+      }
     },
 
     handleScroll(event) {

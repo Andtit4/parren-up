@@ -9,6 +9,8 @@ import WishList from "./components/shop/WishList.vue";
 import About from "./views/About.vue";
 import Contact from "./views/Contact.vue";
 import Login from "./views/login.vue";
+import Admin from "./views/admin.vue";
+import Integrate from "./views/Integrate.vue";
 
 Vue.use(Router);
 
@@ -20,6 +22,25 @@ export default new Router({
       path: "/",
       name: "home",
       component: Home
+    },
+    {
+      path: "/integrate",
+      name: "integrate",
+      component: Integrate
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      beforeEnter() {
+        window.location = "http://localhost/backend/admin";
+      }
+    },
+    {
+      path: "/addProduct",
+      name: "addProduct",
+      beforeEnter() {
+        window.location = "http://localhost/backend/admin/add.php";
+      }
     },
     {
       path: "/login",

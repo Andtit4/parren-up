@@ -56,7 +56,6 @@
                     <div class="text-center">
                       <button
                         type="submit"
-                        v-on:click="userRegistration"
                         class="stext-101 cl0 size-101 bg1 bor14 hov-btn1 p-lr-15 trans-04 pointer"
                       >
                         Adhérer a la communauté
@@ -81,10 +80,7 @@ export default {
         return{
         email: "",
         password: "",
-        firstName: "",
-        lastName: "",
-        phone: "",
-        passwordConfirm: "",
+        name: "",
         users: []
         }
     },
@@ -92,22 +88,15 @@ export default {
 methods: {
     userRegistration() {
         // alert('clicked')
-        HTTP.post('/', {
-        email: this.email,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        password: this.password,
-        phone: this.phone,
-      }).then(response => {
-         console.log(response);
-         alert('Inscription effectuée');
-         this.$router.push("/product")
-      }).catch(error => {
-         console.log(error);
-        this.response = "Error: " + error.response.status;
-      });
+        HTTP.post('/user/create', {
+          email: this.email,
+          pass: this.password,
+          name: this.name,
+        })
     }
-}
+},
+
+
  
 
 };
